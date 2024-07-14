@@ -1,15 +1,15 @@
 import axios from 'axios';
 
-const endPoint = process.env.REACT_APP_API;
+const endPoint = process.env.REACT_APP_API_URL;
 const apiKey = process.env.REACT_APP_API_KEY;
 
-export {    apiKey };
-export const  getKey =()=>{
-    
-console.log("api key", apiKey);
-}
-export const axiosInstance = axios.create({
-    baseURL: endPoint
-});
+export {    apiKey, endPoint };
+
+    export const axiosInstance = axios.create({
+        baseURL: endPoint,
+        params: {
+            key:apiKey,
+        }
+    });
 
 

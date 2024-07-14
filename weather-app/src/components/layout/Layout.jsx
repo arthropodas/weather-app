@@ -11,7 +11,7 @@ const Layout = ({ children }) => {
     <div className="min-h-screen">
      <AppBar />
 
-        sample layout
+  
         <Outlet/>
         <div style={{ flex: 1 }}>{children}</div> {/* Content area */}
     

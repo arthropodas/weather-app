@@ -22,8 +22,8 @@ export default function Country() {
     const getData = async () => {
         try {
           const response = await current("Paris");  
-          const key = getKey()
-          console.log("kwy>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", key)
+          // const key = getKey()
+          // console.log("kwy>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>", key)
           console.log("response:", response.data)                                                                             
         } catch (error) {
           console.error(error)

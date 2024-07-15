@@ -1,28 +1,166 @@
-import React, { useState } from 'react'
-import { useStore } from 'zustand';
-
+import React, { useEffect, useState } from "react";
+import { useStore } from "../../zustand/useStore";
+import { FaSearch } from "react-icons/fa";
+import current from "../../services/Services";
+import Loader from "../../components/loader/Loader";
 
 function Home() {
-//   const [data, setData] = useState('')
-const { data, setData } = useStore(); 
-//   const data = useStore((state) => state.data);
-console.log("response data>>>>>>>>>>>>>>>>>>",data); 
+  const [searchTerm, setSearchTerm] = useState("kerala");
+  const [loading, setLoading] = useState(true);
+
+  const { weatherDetails, setWeatherDetails } = useStore((state) => ({
+    weatherDetails: state.weatherDetails,
+    setWeatherDetails: state.setWeatherDetails,
+  }));
+
+  const handleSearch = async () => {
+    setLoading(true);
+    try {
+      const response = await current(searchTerm);
+      setWeatherDetails(response.data);
+    } catch (error) {
+      console.error("Error fetching weather data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleSearch();
+  }, []);
 
   return (
-<div className="flex  h-screen">
-      <div className="flex-1/3 w-1/3 bg-gray-300">
-        {/* First part - takes 1/3 of the screen height */}
-       div 1ldlldld
-       setDatasdf
-       sd
-      {/* {data} */}
+    <div className="mt-10 flex h-screen">
+      <div className="mt-10 flex-1/3 w-1/3 bg-white-600 flex justify-center">
+        <div className="text-center m-2  items-center gap-4 min-w-[30vw]">
+          <div className="relative">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="border-2  border-gray-300 p-2 rounded-lg w-full"
+              placeholder="Search for a city..."
+            />
+            <FaSearch
+              onClick={handleSearch}
+              className="absolute right-3 top-3 text-gray-500 cursor-pointer"
+            />
+          </div>
+          {loading ? (
+            <Loader />
+          ) : (
+            <>
+              <div>
+                <p className="mt-5 text-2xl">
+                  {weatherDetails?.location?.name}
+                </p>
+              </div>
+              <br />
+              {weatherDetails?.current?.conditions?.icon}
+              <p className="text-7xl">
+                <span>{weatherDetails?.current?.temp_c} °C</span>
+              </p>
+              <div className="flex justify-center">
+                <img
+                  src={weatherDetails?.current?.condition?.icon}
+                  alt="Weather Icon"
+                  className="w-44 h-44"
+                />
+              </div>
+              <p className="text-2xl font-light">
+                {weatherDetails?.current?.condition?.text}
+              </p>
+              <div className="flex justify-center">
+                <hr className="flex border-t-4 border-gray-500 my-4 w-2/3" />
+              </div>
+              <p className="">{weatherDetails?.location?.region}</p>
+              <p>Feels Like: {weatherDetails?.current?.feelslike_c}°C</p>
+              <p className="mt-12 font-medium">
+                {new Date(weatherDetails?.location?.localtime).toLocaleString(
+                  "en-US",
+                  {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                  }
+                )}
+              </p>
+              <p className="mt-10 font-medium text-5xl">
+                <span className="text-3xl">
+                  {weatherDetails?.location?.region}
+                </span>
+                <span className="text-5xl"> | </span>
+                <span className="mx-2 country-style">
+                  {weatherDetails?.location?.country}
+                </span>
+              </p>
+              <div className="text-bottom">
+                <p className="mt-12  font-medium">
+                  last updated :{" "}
+                  {new Date(
+                    weatherDetails?.current?.last_updated
+                  ).toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    hour12: true,
+                  })}
+                </p>
+              </div>
+            </>
+          )}
+        </div>
       </div>
-      <div className="flex-2/3 w-2/3 bg-gray-100">
-        {/* Second part - takes 2/3 of the screen height */}
-     div 2
+
+      <div className="flex-2/3 w-2/3 bg-gray-200">
+        <div className="m-14 grid grid-cols-3 gap-20">
+          <div className="bg-blue-400 h-44 border-r rounded-3xl text-white">
+            <div className="m-6">
+              <p className="text-3xl">wind speed:</p>
+              <p className="mt-5 text-xl">
+                {weatherDetails?.current?.wind_kph} kph
+              </p>
+            </div>
+          </div>
+          <div className="bg-blue-400 h-44 border-r rounded-3xl text-white">
+            <div className="m-6">
+              <p className="text-3xl">Humidity:</p>
+              <p className="mt-5 text-xl">
+                {weatherDetails?.current?.humidity} %
+              </p>
+            </div>
+          </div>
+          <div className="bg-blue-400 h-44 border-r rounded-3xl text-white">
+            <div className="m-6">
+              <p className="text-3xl">Visibility:</p>
+              <p className="mt-5 text-xl">
+                {weatherDetails?.current?.vis_km} kph
+              </p>
+            </div>
+          </div>
+          <div className="bg-blue-400 h-44 border-r rounded-3xl text-white">
+            <div className="m-6">
+              <p className="text-3xl">UV index:</p>
+              <p className="mt-5 text-xl">{weatherDetails?.current?.uv}</p>
+            </div>
+          </div>
+          <div className="bg-blue-400 h-44 border-r rounded-3xl text-white">
+            <div className="m-6">
+              <p className="text-3xl">Pressure:</p>
+              <p className="mt-5 text-xl">
+                {weatherDetails?.current?.pressure_mb} mb
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;

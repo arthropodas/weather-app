@@ -1,7 +1,10 @@
+import axios from "axios";
 import { axiosInstance } from "../axiosInstance";
-import { apiKey } from "../axiosInstance";
+import { apiKey, endPoint } from "../axiosInstance";
+
 
 export default async function current(country){
-    console.log("isnide the cju", country, apiKey);
-    return await axiosInstance.get(`/v1/v4/current.json?&key=${apiKey}&q=${country}`)
+    console.log("the endpoitn is >>>>>>>>>>>>>>>>" ,endPoint);
+    console.log("axios istnace", axiosInstance)
+    return await axiosInstance.get("/v1/current.json",{params  :{q:country}})
 }

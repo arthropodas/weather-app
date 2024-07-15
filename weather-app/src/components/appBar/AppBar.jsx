@@ -8,7 +8,8 @@ import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import current from '../../services/Services';
-import useStore from '../../zustand/useStore'; // Import Zustand store
+import { useStore } from '../../zustand/useStore';
+import { Button } from '@mui/material';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -40,7 +41,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   width: '100%',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     [theme.breakpoints.up('sm')]: {
@@ -54,17 +54,23 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function SearchAppBar() {
   const [searchQuery, setSearchQuery] = useState('');
-  const setData = useStore((state) => state.setData); // Accessing Zustand setter function
+  const { weatherDetails, setWeatherDetails } = useStore((state) => ({
+    weatherDetails: state.weatherDetails,
+    setWeatherDetails: state.setWeatherDetails,
+  }));
 
   const getData = async (query) => {
     try {
-      const response = await current(query); // Assuming 'current' is a function that makes the API call
-      console.log("Response for query", query, ":", response?.data);
-      
-      setData(response?.data); // Update Zustand state with fetched data
+      const response = await current(query);
+      console.log('Response for query', query, ':', response?.data?.location);
+      setWeatherDetails(response?.data); // Update Zustand state with fetched data
     } catch (error) {
       console.error('Error fetching data:', error);
     }
+  };
+
+  const handleSearchIconClick = () => {
+    getData(searchQuery);
   };
 
   const handleSearch = (event) => {
@@ -79,7 +85,7 @@ export default function SearchAppBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ gap: 3 }}>
+      <AppBar position="fixed" sx={{ gap: 3 }}>
         <Toolbar sx={{ gap: 3 }}>
           <LightModeIcon />
           <Typography
@@ -91,7 +97,7 @@ export default function SearchAppBar() {
             Weather Wise
           </Typography>
           <Search>
-            <SearchIconWrapper>
+            <SearchIconWrapper onClick={handleSearchIconClick}>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
@@ -104,6 +110,7 @@ export default function SearchAppBar() {
           </Search>
         </Toolbar>
       </AppBar>
+     
     </Box>
   );
 }

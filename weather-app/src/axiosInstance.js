@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const endPoint = process.env.REACT_APP_API_URL;
+const endPoint = process.env.REACT_APP_API;
 const apiKey = process.env.REACT_APP_API_KEY;
 
 export {    apiKey, endPoint };

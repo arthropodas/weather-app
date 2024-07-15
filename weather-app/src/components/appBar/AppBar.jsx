@@ -85,7 +85,7 @@ export default function SearchAppBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ gap: 3 }}>
+      <AppBar position="fixed" sx={{ gap: 3 }}>
         <Toolbar sx={{ gap: 3 }}>
           <LightModeIcon />
           <Typography

@@ -9,7 +9,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import current from '../../services/Services';
 import { useStore } from '../../zustand/useStore';
-import { Button } from '@mui/material';
+import { useTranslation } from "react-i18next";
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -54,10 +54,22 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function SearchAppBar() {
   const [searchQuery, setSearchQuery] = useState('');
-  const { weatherDetails, setWeatherDetails } = useStore((state) => ({
+  const { weatherDetails, setWeatherDetails, language, setLanguage } = useStore((state) => ({
     weatherDetails: state.weatherDetails,
     setWeatherDetails: state.setWeatherDetails,
+    language: state.language,
+    setLanguage: state.setLanguage,
   }));
+  const { t, i18n } = useTranslation();
+
+  const changeLanguage = (lng) => {
+    setLanguage(lng);
+    i18n.changeLanguage(lng); // Update the i18n instance
+  };
+
+  const handleSearchIconClick = () => {
+    getData(searchQuery);
+  };
 
   const getData = async (query) => {
     try {
@@ -67,10 +79,6 @@ export default function SearchAppBar() {
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-  };
-
-  const handleSearchIconClick = () => {
-    getData(searchQuery);
   };
 
   const handleSearch = (event) => {
@@ -94,14 +102,30 @@ export default function SearchAppBar() {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            Weather Wise
+            {t("title")}
           </Typography>
+          <div className="relative inline-block w-64 text-black">
+            <select 
+              onChange={(e) => changeLanguage(e.target.value)} 
+              className="block appearance-none w-full bg-white border border-gray-400 hover:border-gray-500 px-4 py-2 pr-8 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+            >
+              <option value="en">English</option>
+              <option value="fr">French</option>
+              <option value="ar">Arabic</option>
+              <option value="it">Italian</option>
+              <option value="ja">Japanese</option>
+              <option value="de">German</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M7 10l5 5 5-5H7z"/></svg>
+            </div>
+          </div>
           <Search>
             <SearchIconWrapper onClick={handleSearchIconClick}>
               <SearchIcon />
             </SearchIconWrapper>
             <StyledInputBase
-              placeholder="Search…"
+              placeholder={t("searchCity")}
               inputProps={{ 'aria-label': 'search' }}
               value={searchQuery}
               onChange={handleChange}
@@ -110,7 +134,6 @@ export default function SearchAppBar() {
           </Search>
         </Toolbar>
       </AppBar>
-     
     </Box>
   );
 }

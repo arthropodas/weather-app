@@ -3,15 +3,24 @@ import { useStore } from "../../zustand/useStore";
 import { FaSearch } from "react-icons/fa";
 import current from "../../services/Services";
 import Loader from "../../components/loader/Loader";
+import { useTranslation } from "react-i18next";
+import Chatbot from "../../components/chatbot/Chatbot";
+import { Tooltip } from "@mui/material";
 
 function Home() {
-  const [searchTerm, setSearchTerm] = useState("kerala");
-  const [loading, setLoading] = useState(true);
-
-  const { weatherDetails, setWeatherDetails } = useStore((state) => ({
+  const { weatherDetails, setWeatherDetails, language } = useStore((state) => ({
     weatherDetails: state.weatherDetails,
     setWeatherDetails: state.setWeatherDetails,
+    language: state.language,
   }));
+  const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    i18n.changeLanguage(language);
+  }, [language, i18n]);
+
+  const [searchTerm, setSearchTerm] = useState("kerala");
+  const [loading, setLoading] = useState(true);
 
   const handleSearch = async () => {
     setLoading(true);
@@ -31,15 +40,16 @@ function Home() {
 
   return (
     <div className="mt-10 flex h-screen">
+
       <div className="mt-10 flex-1/3 w-1/3 bg-white-600 flex justify-center">
-        <div className="text-center m-2  items-center gap-4 min-w-[30vw]">
+        <div className="text-center m-2 items-center gap-4 min-w-[30vw]">
           <div className="relative">
             <input
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="border-2  border-gray-300 p-2 rounded-lg w-full"
-              placeholder="Search for a city..."
+              className="border-2 border-gray-300 p-2 rounded-lg w-full"
+              placeholder={t("searchCity")}
             />
             <FaSearch
               onClick={handleSearch}
@@ -51,6 +61,7 @@ function Home() {
           ) : (
             <>
               <div>
+                <h1>{t('welcome')}</h1>
                 <p className="mt-5 text-2xl">
                   {weatherDetails?.location?.name}
                 </p>
@@ -74,7 +85,7 @@ function Home() {
                 <hr className="flex border-t-4 border-gray-500 my-4 w-2/3" />
               </div>
               <p className="">{weatherDetails?.location?.region}</p>
-              <p>Feels Like: {weatherDetails?.current?.feelslike_c}°C</p>
+              <p>{t("feelsLike")}: {weatherDetails?.current?.feelslike_c}°C</p>
               <p className="mt-12 font-medium">
                 {new Date(weatherDetails?.location?.localtime).toLocaleString(
                   "en-US",
@@ -98,8 +109,8 @@ function Home() {
                 </span>
               </p>
               <div className="text-bottom">
-                <p className="mt-12  font-medium">
-                  last updated :{" "}
+                <p className="mt-12 font-medium">
+                {t("lastUpdated")} :{" "}
                   {new Date(
                     weatherDetails?.current?.last_updated
                   ).toLocaleString("en-US", {
@@ -121,7 +132,7 @@ function Home() {
         <div className="m-14 grid grid-cols-3 gap-20">
           <div className="bg-blue-400 h-44 border-r rounded-3xl text-white">
             <div className="m-6">
-              <p className="text-3xl">wind speed:</p>
+              <p className="text-3xl">{t("windSpeed")}:</p>
               <p className="mt-5 text-xl">
                 {weatherDetails?.current?.wind_kph} kph
               </p>
@@ -129,7 +140,7 @@ function Home() {
           </div>
           <div className="bg-blue-400 h-44 border-r rounded-3xl text-white">
             <div className="m-6">
-              <p className="text-3xl">Humidity:</p>
+              <p className="text-3xl">{t("humidity")}:</p>
               <p className="mt-5 text-xl">
                 {weatherDetails?.current?.humidity} %
               </p>
@@ -137,7 +148,7 @@ function Home() {
           </div>
           <div className="bg-blue-400 h-44 border-r rounded-3xl text-white">
             <div className="m-6">
-              <p className="text-3xl">Visibility:</p>
+              <p className="text-3xl">{t("visibility")}:</p>
               <p className="mt-5 text-xl">
                 {weatherDetails?.current?.vis_km} kph
               </p>
@@ -145,18 +156,21 @@ function Home() {
           </div>
           <div className="bg-blue-400 h-44 border-r rounded-3xl text-white">
             <div className="m-6">
-              <p className="text-3xl">UV index:</p>
+              <p className="text-3xl">{t("uvIndex")} :</p>
               <p className="mt-5 text-xl">{weatherDetails?.current?.uv}</p>
             </div>
           </div>
           <div className="bg-blue-400 h-44 border-r rounded-3xl text-white">
             <div className="m-6">
-              <p className="text-3xl">Pressure:</p>
+              <p className="text-3xl">{t("pressure")}:</p>
               <p className="mt-5 text-xl">
                 {weatherDetails?.current?.pressure_mb} mb
               </p>
             </div>
           </div>
+     
+  <Chatbot />
+
         </div>
       </div>
     </div>

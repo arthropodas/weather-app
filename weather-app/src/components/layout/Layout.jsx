@@ -14,6 +14,7 @@ const Layout = ({ children }) => {
   
         <Outlet/>
         <div style={{ flex: 1 }}>{children}</div> {/* Content area */}
+      
     
     </div>
   );

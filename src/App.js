@@ -1,18 +1,17 @@
 import logo from './logo.svg';
 import './App.css';
 
-import current from './services/Services';
-import { getKey } from './axiosInstance';
-import Country from './components/country/Country';
-import { RouterProvider } from 'react-router-dom';
-import router from './router';
-import Chatbot from './components/chatbot/Chatbot';
+
+import SearchAppBar from './components/appBar/AppBar';
+import Home from './Pages/Home/Home';
                                                                                                                     
 function App() {
   
   return (
     <div>
-     <RouterProvider router={router} />
+      <SearchAppBar/>
+      <Home/>
+   
     </div>
   );
 }

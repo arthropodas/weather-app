@@ -169,7 +169,7 @@ function Home() {
             </div>
           </div>
      
-  <Chatbot />
+
 
         </div>
       </div>

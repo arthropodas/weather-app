@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "../Pages/Home/Home";
 import Layout from "../components/layout/Layout";
+import i18n from "../components/i18next";
 
 const routes =[
     {

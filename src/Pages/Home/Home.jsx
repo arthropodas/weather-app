@@ -4,7 +4,9 @@ import { FaSearch } from "react-icons/fa";
 import current from "../../services/Services";
 import Loader from "../../components/loader/Loader";
 import { useTranslation } from "react-i18next";
-import Chatbot from "../../components/chatbot/Chatbot";
+
+
+
 import { Tooltip } from "@mui/material";
 
 function Home() {
